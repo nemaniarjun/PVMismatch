@@ -5,14 +5,13 @@ Created on Jul 29, 2012
 @author: marko
 """
 from PIL import Image, ImageTk
-from Tkconstants import RIGHT, LEFT, BOTH, E, W, HORIZONTAL
-from Tkinter import Frame, Label, Button, Toplevel, OptionMenu, Scale, Entry, \
+from six.moves.tkinter_constants import RIGHT, LEFT, BOTH, E, W, HORIZONTAL
+from six.moves.tkinter import Frame, Label, Button, Toplevel, OptionMenu, Scale, Entry, \
     Message, Spinbox, IntVar, StringVar, DoubleVar
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, \
-    NavigationToolbar2TkAgg
+from six.moves.tkinter_font import nametofont
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from threading import Thread
-from tkFont import nametofont
-import Queue
+import queue as Queue
 import json
 import logging
 import numpy as np
@@ -232,10 +231,10 @@ class PVapplicaton(Frame):
                                                 resize_callback=None)
         pvSysFigCanvas = self.pvSysFigCanvas
         pvSysFigCanvas.get_tk_widget()._name = 'pvSysFigCanvas'  # IGNORE:W0212
-        pvSysFigCanvas.show()
+        pvSysFigCanvas.draw()
         # NB: FigureCanvasTkAgg._tkcanvas is FigureCanvasTkAgg.get_tk_widget()
         pvSysFigCanvas.get_tk_widget().pack(fill=BOTH)
-        pvSysToolbar = NavigationToolbar2TkAgg(pvSysFigCanvas, pvSysPlotFrame)
+        pvSysToolbar = NavigationToolbar2Tk(pvSysFigCanvas, pvSysPlotFrame)
         pvSysToolbar.update()
         pvSysToolbar.pack(fill=BOTH)
 
@@ -533,7 +532,7 @@ class PVapplicaton(Frame):
     def updateIVstats(self):
         # reuse sysPlot figure and update pvSysFigCanvas
         self.pvSysPlot = self.pvSys.plotSys(self.pvSysPlot)
-        self.pvSysFigCanvas.show()
+        self.pvSysFigCanvas.draw()
         self.txtImp.set("{:7.3f}".format(self.pvSys.Imp))  # [A]
         self.txtVmp.set("{:7.3f}".format(self.pvSys.Vmp))  # [V]
         self.txtPmp.set("{:7.3f}".format(self.pvSys.Pmp / 1000))  # [kW]

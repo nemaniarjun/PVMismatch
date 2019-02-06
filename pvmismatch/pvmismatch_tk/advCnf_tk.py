@@ -5,9 +5,9 @@ Created on Aug 18, 2012
 @author: mmikofski
 """
 
-from Tkconstants import W, E, RIGHT
-from Tkinter import Frame, Label, Button, DoubleVar, Entry, IntVar
-import tkFont
+from six.moves.tkinter_constants import W, E, RIGHT
+from six.moves.tkinter import Frame, Label, Button, DoubleVar, Entry, IntVar
+import six.moves.tkinter_font as tkFont
 
 PVAPP_TXT = 'PVmismatch'
 INTEGERS = '0123456789'
@@ -35,30 +35,38 @@ class AdvCnf_tk(Frame):
 
         # variables
         cellnum = self.cellnum = IntVar(self, name='cellnum')
+
+        current_cell = cellnum.get()
+        total_cells = pvapp.numCells.get()
+        total_mods = pvapp.numMods.get()
+        current_pos = current_cell // total_cells
+        temp1 = self.temp1 = pvapp.pvSys.pvmods[current_pos // total_mods][current_pos % total_mods]
+        temp = self.temp = temp1.pvcells[current_cell % total_cells]
+
         Rs = self.Rs = DoubleVar(self, name='Rs')
         Rsh = self.Rsh = DoubleVar(self, name='Rsh')
         Isat1_T0 = self.Isat1_T0 = DoubleVar(self, name='Isat1_T0')
         Isat2 = self.Isat2 = DoubleVar(self, name='Isat2')
-        Rs.set("{:10.4e}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].Rs))
-        Rsh.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].Rsh))
-        Isat1_T0.set("{:10.4e}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].Isat1_T0))
-        Isat2.set("{:10.4e}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].Isat2))
+        Rs.set("{:10.4e}".format(temp.Rs))
+        Rsh.set("{:10.4f}".format(temp.Rsh))
+        Isat1_T0.set("{:10.4e}".format(temp.Isat1_T0))
+        Isat2.set("{:10.4e}".format(temp.Isat2))
         Aph = self.Aph = DoubleVar(self, name='Aph')
         Isc0_T0 = self.Isc0_T0 = DoubleVar(self, name='Isc0_T0')
         Tcell = self.Tcell = DoubleVar(self, name='Tcell')
         Vbypass = self.Vbypass = DoubleVar(self, name='Vbypasss')
-        Aph.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].Aph))
-        Isc0_T0.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].Isc0_T0))
-        Tcell.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].Tcell))
-        Vbypass.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].Vbypass))
+        Aph.set("{:10.4f}".format(temp.Aph))
+        Isc0_T0.set("{:10.4f}".format(temp.Isc0_T0))
+        Tcell.set("{:10.4f}".format(temp.Tcell))
+        Vbypass.set("{:10.4f}".format(temp1.Vbypass))
         aRBD = self.aRBD = DoubleVar(self, name='aRBD')
         VRBD = self.VRBD = DoubleVar(self, name='VRBD')
         nRBD = self.nRBD = DoubleVar(self, name='nRBD')
         cellArea = self.cellArea = DoubleVar(self, name='cellArea')
-        aRBD.set("{:10.4e}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].aRBD))
-        VRBD.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].VRBD))
-        nRBD.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[cellnum.get() % pvapp.numCells.get()].nRBD))
-        cellArea.set("{:10.4f}".format(pvapp.pvSys.pvmods[cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].cellArea))
+        aRBD.set("{:10.4e}".format(temp.aRBD))
+        VRBD.set("{:10.4f}".format(temp.VRBD))
+        nRBD.set("{:10.4f}".format(temp.nRBD))
+        cellArea.set("{:10.4f}".format(temp1.cellArea))
 
         # must register vcmd and invcmd as Tcl functions
         vcmd = (self.register(self.validateWidget),
@@ -220,7 +228,8 @@ class AdvCnf_tk(Frame):
         self.pvapp.msgtext.set(messagetext["pvapplication"]["Ready"])
         pvapp = self.pvapp
         kwargs = {'Rs': Rs, 'Rsh': Rsh, 'Isat1_T0': Isat1_T0, 'Isat2': Isat2, 'Isc0_T0': Isc0_T0, 'Tcell': Tcell, 'aRBD': aRBD, 'VRBD': VRBD, 'nRBD': nRBD}
-        pvapp.pvSys.pvmods[self.cellnum.get() / (pvapp.numCells.get() * pvapp.numMods.get())][(self.cellnum.get() / pvapp.numCells.get()) % pvapp.numMods.get()].pvcells[self.cellnum.get() % pvapp.numCells.get()].update(
+
+        self.temp.update(
             **kwargs
         )  # cellArea, Vbypass updated by module
         # update PVapplication_tk
@@ -248,7 +257,7 @@ class AdvCnf_tk(Frame):
     def validateWidget(self, *args):
         # W = Tkinter.W = 'w' is already used, so use W_ instead
         (d, i, P, s, S, v, V, W_) = args  # @UnusedVariable # IGNORE:W0612
-        print "OnValidate:",
+        print("OnValidate:",)
         print("d={}, i={}, P={}, s={}, S={}, v={}, V={}, W={}".format(*args))
         if W_ == '.advCnfTop.advCnf.rsEntry':
             valType = FLOATS
@@ -304,7 +313,7 @@ class AdvCnf_tk(Frame):
 
     def invalidWidget(self, *args):
         (d, i, P, s, S, v, V, W_) = args  # @UnusedVariable # IGNORE:W0612
-        print "OnInvalid: ",
+        print("OnInvalid: ",)
         print("d={}, i={}, P={}, s={}, S={}, v={}, V={}, W={}".format(*args))
         if W_ == ".advCnfTop.advCnf.rsEntry":
             errText = 'Invalid series resistance!'
